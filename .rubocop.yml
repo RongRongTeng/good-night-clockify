@@ -1,0 +1,41 @@
+require:
+  - rubocop-factory_bot
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-performance
+
+AllCops:
+  Exclude:
+    - bin/*
+    - db/schema.rb
+    - vendor/**/*
+  NewCops: enable
+
+Metrics/MethodLength:
+  Exclude:
+    - 'db/migrate/**/*'
+
+RSpec/NamedSubject:
+  Enabled: false
+
+# Default Max is 3. Depending on the example to determine its reasonableness.
+RSpec/NestedGroups:
+  Severity: warning
+
+RSpec/IndexedLet:
+  Enabled: false
+
+# Use let! to setup objects not referenced in tests but for regression test
+# With a let! objects can be descriptive
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Naming/VariableNumber:
+  AllowedIdentifiers: [iso8601, v1]
+  EnforcedStyle: snake_case
