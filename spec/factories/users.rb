@@ -10,6 +10,7 @@
 #  encrypted_password :string           default(""), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  jti                :string           default(""), not null
 #
 FactoryBot.define do
   factory :user do

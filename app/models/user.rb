@@ -10,6 +10,7 @@
 #  encrypted_password :string           default(""), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  jti                :string           default(""), not null
 #
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
