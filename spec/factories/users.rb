@@ -11,11 +11,10 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #
-class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
-
-  validates :name, presence: true
+FactoryBot.define do
+  factory :user do
+    sequence(:name)  { |n| "User #{n}" }
+    sequence(:email) { |n| "factory_bot_email_#{n}@example.com" }
+    password { SecureRandom.base64(10) }
+  end
 end
