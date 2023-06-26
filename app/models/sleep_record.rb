@@ -13,6 +13,8 @@
 #  updated_at          :datetime         not null
 #
 class SleepRecord < ApplicationRecord
+  scope :from_previous_week_to_now, -> { where('clocked_in >= ?', DateTime.current.prev_week) }
+
   belongs_to :user
 
   validates :clocked_in, presence: true

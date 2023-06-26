@@ -15,6 +15,41 @@
 require 'rails_helper'
 
 RSpec.describe SleepRecord do
+  describe '.from_previous_week_to_now' do
+    subject do
+      travel_to(DateTime.new(2023, 6, 16, 0, 0, 0)) do
+        described_class.from_previous_week_to_now
+      end
+    end
+
+    let!(:sleep_record_1) do
+      create(:sleep_record, clocked_in: DateTime.new(2023, 6, 1, 13, 0, 0),
+                            clocked_out: DateTime.new(2023, 6, 1, 14, 29, 39))
+    end
+
+    let!(:sleep_record_2) do
+      create(:sleep_record, clocked_in: DateTime.new(2023, 6, 5, 21, 0, 0),
+                            clocked_out: DateTime.new(2023, 6, 5, 22, 30, 0))
+    end
+
+    let!(:sleep_record_3) do
+      create(:sleep_record, clocked_in: DateTime.new(2023, 6, 6, 16, 0, 0),
+                            clocked_out: DateTime.new(2023, 6, 6, 23, 30, 0))
+    end
+
+    let!(:sleep_record_4) do
+      create(:sleep_record, clocked_in: DateTime.new(2023, 6, 6, 16, 0, 0),
+                            clocked_out: nil)
+    end
+
+    let!(:sleep_record_5) do
+      create(:sleep_record, clocked_in: DateTime.new(2023, 6, 7, 16, 0, 0),
+                            clocked_out: DateTime.new(2023, 6, 8, 3, 30, 0))
+    end
+
+    it { is_expected.to contain_exactly(sleep_record_2, sleep_record_3, sleep_record_4, sleep_record_5) }
+  end
+
   describe 'Callbacks' do
     describe '#set_duration_in_minutes' do
       let(:sleep_record) { create(:sleep_record, :clocked_in_only, clocked_in: DateTime.new(2022, 6, 25, 15, 30, 30)) }

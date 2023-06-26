@@ -7,7 +7,13 @@ Rails.application.routes.draw do
     namespace :api do
       namespace :v1 do
         resources :sleep_records, except: %i[new edit]
-        resources :followings, only: %i[index create destroy]
+        resources :followings, only: %i[index create destroy] do
+          scope module: :followings, as: :followings do
+            collection do
+              resources :sleep_records, only: :index
+            end
+          end
+        end
       end
     end
   end
