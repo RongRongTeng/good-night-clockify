@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_26_043148) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_26_092109) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "plpgsql"
@@ -27,6 +27,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_26_043148) do
     t.check_constraint "clocked_in < clocked_out", name: "sleep_records_clocked_in_and_clocked_out_sequence"
   end
 
+  create_table "user_relationships", force: :cascade do |t|
+    t.bigint "follower_id", null: false
+    t.bigint "following_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["follower_id", "following_id"], name: "index_user_relationships_on_follower_id_and_following_id", unique: true
+    t.index ["follower_id"], name: "index_user_relationships_on_follower_id"
+    t.index ["following_id"], name: "index_user_relationships_on_following_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", default: "", null: false
@@ -39,4 +49,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_26_043148) do
   end
 
   add_foreign_key "sleep_records", "users"
+  add_foreign_key "user_relationships", "users", column: "follower_id"
+  add_foreign_key "user_relationships", "users", column: "following_id"
 end
