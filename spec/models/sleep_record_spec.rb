@@ -62,4 +62,69 @@ RSpec.describe SleepRecord do
       end
     end
   end
+
+  describe 'Validations' do
+    describe '#validate_overlaps_with_others' do
+      let(:me) { create(:user) }
+
+      let!(:my_sleep_record_1) do
+        create(:sleep_record, user: me, clocked_in: DateTime.new(2023, 6, 1, 0, 0, 0), clocked_out: nil)
+      end
+
+      let!(:my_sleep_record_2) do
+        create(:sleep_record, user: me, clocked_in: DateTime.new(2023, 6, 1, 13, 0, 0),
+                              clocked_out: DateTime.new(2023, 6, 1, 14, 29, 39))
+      end
+
+      let!(:not_my_sleep_record) do
+        create(:sleep_record, clocked_in: DateTime.new(2023, 6, 1, 14, 0, 0),
+                              clocked_out: DateTime.new(2023, 6, 1, 14, 29, 39))
+      end
+
+      context 'when is new record' do
+        let(:sleep_record) do
+          build(:sleep_record, user: me, clocked_in: DateTime.new(2023, 6, 1, 0, 0, 0), clocked_out: nil)
+        end
+
+        it :aggregate_failures do
+          expect(sleep_record).to be_invalid
+          expect(sleep_record.errors.messages)
+            .to eq(base: ["Overlaps with SleepRecord##{my_sleep_record_1.id} (2023-06-01 00:00:00 UTC ~ )"])
+
+          sleep_record.clocked_in = DateTime.new(2023, 6, 1, 14, 0, 0)
+          expect(sleep_record).to be_invalid
+          expect(sleep_record.errors.messages).to eq(base: ["Overlaps with SleepRecord##{my_sleep_record_2.id} " \
+                                                            '(2023-06-01 13:00:00 UTC ~ 2023-06-01 14:29:39 UTC)'])
+        end
+      end
+
+      context 'when is persisted' do
+        let!(:sleep_record) do
+          create(:sleep_record, user: me, clocked_in: DateTime.new(2023, 5, 31, 0, 0, 0), clocked_out: nil)
+        end
+
+        it :aggregate_failures do
+          expect(sleep_record).to be_valid
+
+          sleep_record.clocked_out = DateTime.new(2023, 6, 1, 13, 29, 39)
+          expect(sleep_record).to be_invalid
+          expect(sleep_record.errors.messages).to eq(
+            base: [
+              "Overlaps with SleepRecord##{my_sleep_record_1.id} (2023-06-01 00:00:00 UTC ~ )",
+              "Overlaps with SleepRecord##{my_sleep_record_2.id} " \
+              '(2023-06-01 13:00:00 UTC ~ 2023-06-01 14:29:39 UTC)'
+            ]
+          )
+
+          sleep_record.clocked_out = DateTime.new(2023, 5, 31, 23, 59, 59)
+          expect(sleep_record).to be_valid
+        end
+
+        it 'does not raise db level error due to TSRANGE lower bound > upper bound' do
+          sleep_record.clocked_out = DateTime.new(2022, 6, 1, 13, 29, 39)
+          expect(sleep_record).to be_invalid
+        end
+      end
+    end
+  end
 end

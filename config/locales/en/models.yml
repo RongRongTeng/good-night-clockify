@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    errors:
+      models:
+        sleep_record:
+          attributes:
+            base:
+              overlaps_with_others: Overlaps with SleepRecord#%{id} (%{clocked_in} ~ %{clocked_out})
