@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_25_080748) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_26_043148) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "btree_gist"
   enable_extension "plpgsql"
 
   create_table "sleep_records", force: :cascade do |t|
@@ -21,6 +22,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_25_080748) do
     t.integer "duration_in_minutes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index "user_id, tsrange(clocked_in, COALESCE(clocked_out, clocked_in), '[]'::text)", name: "sleep_records_clocked_duration_no_overlap_within_user", using: :gist
     t.index ["user_id"], name: "index_sleep_records_on_user_id"
     t.check_constraint "clocked_in < clocked_out", name: "sleep_records_clocked_in_and_clocked_out_sequence"
   end
