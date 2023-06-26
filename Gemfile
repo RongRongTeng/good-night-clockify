@@ -41,6 +41,7 @@ gem 'bootsnap', require: false
 gem 'apipie-rails', '~> 1.2', '>= 1.2.1'
 gem 'devise'
 gem 'devise-jwt'
+gem 'kaminari'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
