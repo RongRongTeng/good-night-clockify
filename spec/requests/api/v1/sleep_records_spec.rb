@@ -191,6 +191,25 @@ RSpec.describe 'Api::V1::SleepRecords', aggregate_failures: true do
         )
       end
     end
+
+    context 'with missing parameter' do
+      let(:params) do
+        { clocked_in: nil }
+      end
+
+      it 'renders a JSON response with error messages' do
+        subject
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json_body).to eq(
+          {
+            status: '422',
+            error: 'Unprocessable Entity',
+            detail: "Invalid parameter 'clocked_in' value nil: Must be a valid ISO 8601 datetime format"
+          }
+        )
+      end
+    end
   end
 
   describe 'PATCH /api/v1/sleep_records/:id' do
@@ -245,6 +264,25 @@ RSpec.describe 'Api::V1::SleepRecords', aggregate_failures: true do
               status: '422',
               error: 'Unprocessable Entity',
               detail: { base: ["Overlaps with SleepRecord##{overlapped_sleep_record.id} (2023-06-01 03:00:00 UTC ~ )"] }
+            }
+          )
+        end
+      end
+
+      context 'with invalid parameter format' do
+        let(:params) do
+          { clocked_in: 'wrong format' }
+        end
+
+        it 'renders a JSON response with error messages' do
+          subject
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(json_body).to eq(
+            {
+              status: '422',
+              error: 'Unprocessable Entity',
+              detail: "Invalid parameter 'clocked_in' value \"wrong format\": Must be a valid ISO 8601 datetime format"
             }
           )
         end

@@ -7,6 +7,10 @@ class ApplicationController < ActionController::API
 
   before_action :authenticate_user!
 
+  rescue_from Apipie::ParamError do |error|
+    render 'shared/error', status: :unprocessable_entity, locals: { detail: error }
+  end
+
   rescue_from ActiveRecord::RecordNotFound do |error|
     render 'shared/error', status: :not_found, locals: { detail: error }
   end
