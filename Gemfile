@@ -41,6 +41,7 @@ gem 'bootsnap', require: false
 gem 'apipie-rails', '~> 1.2', '>= 1.2.1'
 gem 'devise'
 gem 'devise-jwt'
+gem 'dotenv-rails'
 gem 'kaminari'
 
 group :development, :test do
