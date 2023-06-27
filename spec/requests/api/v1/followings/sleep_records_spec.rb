@@ -68,7 +68,10 @@ RSpec.describe 'Api::V1::Followings::SleepRecords', aggregate_failures: true do
         [
           {
             id: my_following_sleep_record_5.id,
-            user_id: users[1].id,
+            user: {
+              id: users[1].id,
+              name: users[1].name
+            },
             clocked_in: '2023-06-07T16:00:00.000Z',
             clocked_out: '2023-06-08T03:30:00.000Z',
             duration_in_minutes: 690,
@@ -77,7 +80,10 @@ RSpec.describe 'Api::V1::Followings::SleepRecords', aggregate_failures: true do
           },
           {
             id: my_following_sleep_record_3.id,
-            user_id: users[0].id,
+            user: {
+              id: users[0].id,
+              name: users[0].name
+            },
             clocked_in: '2023-06-06T16:00:00.000Z',
             clocked_out: '2023-06-06T23:30:00.000Z',
             duration_in_minutes: 450,
@@ -86,7 +92,10 @@ RSpec.describe 'Api::V1::Followings::SleepRecords', aggregate_failures: true do
           },
           {
             id: my_following_sleep_record_2.id,
-            user_id: users[0].id,
+            user: {
+              id: users[0].id,
+              name: users[0].name
+            },
             clocked_in: '2023-06-05T21:00:00.000Z',
             clocked_out: '2023-06-05T22:30:00.000Z',
             duration_in_minutes: 90,
@@ -95,7 +104,10 @@ RSpec.describe 'Api::V1::Followings::SleepRecords', aggregate_failures: true do
           },
           {
             id: my_following_sleep_record_4.id,
-            user_id: users[1].id,
+            user: {
+              id: users[1].id,
+              name: users[1].name
+            },
             clocked_in: '2023-06-06T16:00:00.000Z',
             clocked_out: nil,
             duration_in_minutes: nil,
@@ -121,7 +133,10 @@ RSpec.describe 'Api::V1::Followings::SleepRecords', aggregate_failures: true do
           [
             {
               id: my_following_sleep_record_2.id,
-              user_id: users[0].id,
+              user: {
+                id: users[0].id,
+                name: users[0].name
+              },
               clocked_in: '2023-06-05T21:00:00.000Z',
               clocked_out: '2023-06-05T22:30:00.000Z',
               duration_in_minutes: 90,
@@ -130,7 +145,10 @@ RSpec.describe 'Api::V1::Followings::SleepRecords', aggregate_failures: true do
             },
             {
               id: my_following_sleep_record_4.id,
-              user_id: users[1].id,
+              user: {
+                id: users[1].id,
+                name: users[1].name
+              },
               clocked_in: '2023-06-06T16:00:00.000Z',
               clocked_out: nil,
               duration_in_minutes: nil,
