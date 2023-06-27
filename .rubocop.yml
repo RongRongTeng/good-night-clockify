@@ -20,7 +20,7 @@ RSpec/NamedSubject:
 
 # Default Max is 3. Depending on the example to determine its reasonableness.
 RSpec/NestedGroups:
-  Severity: warning
+  Severity: info
 
 RSpec/IndexedLet:
   Enabled: false
