@@ -1,0 +1,56 @@
+version: 2.1
+commands:
+  install_deps:
+    steps:
+      - restore_cache:
+          keys:
+            - good-night-clockify-{{ checksum "Gemfile.lock" }}
+            - good-night-clockify-
+
+      - run:
+          name: bundle install
+          command:
+            bundle install --path vendor/bundle
+
+      - save_cache:
+          key: good-night-clockify-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+  default_steps:
+    steps:
+      - checkout
+      - install_deps
+
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:3.2.2
+        environment:
+          - RAILS_ENV: test
+      - image: cimg/postgres:15.3
+    working_directory: ~/repo
+    steps:
+      - default_steps
+      - run:
+          name: wait for db
+          command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:migrate
+      - run:
+          name: run tests
+          command: bundle exec rspec
+
+  rubocop:
+    docker:
+      - image: cimg/ruby:3.2.2
+    working_directory: ~/repo
+    steps:
+      - default_steps
+      - run: bundle exec rubocop --fail-level=convention --display-only-fail-level-offenses
+
+workflows:
+  build_and_rubocop:
+    jobs:
+      - build
+      - rubocop
