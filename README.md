@@ -23,6 +23,7 @@ setup .env file, refer to the example file at .env.example
 docker-compose build
 docker-compose run --rm web bundle exec rake db:create
 docker-compose run --rm web bundle exec rake db:migrate
+docker-compose run --rm web bundle exec rake db:seed 
 ```
 
 ### Run the server
